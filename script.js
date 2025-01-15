@@ -52,7 +52,7 @@ class MotionSoundGenerator {
         
         // Create synth
         this.synth = new Tone.PolySynth(Tone.Synth).toDestination();
-        this.synth.volume.value = -12;
+        this.synth.volume.value = 0;
 
         // Create effects
         this.filter = new Tone.Filter(200, "lowpass").toDestination();
@@ -61,6 +61,13 @@ class MotionSoundGenerator {
         // Connect synth through effects
         this.synth.connect(this.filter);
         this.filter.connect(this.reverb);
+
+        // Log audio context state
+        console.log('Audio context state:', Tone.context.state);
+        if (Tone.context.state !== 'running') {
+            await Tone.context.resume();
+            console.log('Audio context resumed');
+        }
 
         // Setup motion listener
         window.addEventListener('devicemotion', this.handleMotion);
