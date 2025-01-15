@@ -13,6 +13,7 @@ body {
     align-items: center;
     justify-content: center;
     position: relative;
+    margin: 0; /* Ensure no margin */
 }
 
 .container {
@@ -20,7 +21,7 @@ body {
     max-width: 500px;
     padding: 20px;
     text-align: center;
-    background: rgba(173, 216, 230, 0.8); /* Light blue background */
+    background: rgba(173, 216, 230, 0.8);
     border-radius: 10px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
@@ -36,7 +37,7 @@ body {
 }
 
 #startButton {
-    background: #00BFFF; /* Deep sky blue */
+    background: #00BFFF;
     border: none;
     color: white;
     padding: 15px 30px;
@@ -47,13 +48,13 @@ body {
 }
 
 #startButton:hover {
-    background: #1E90FF; /* Dodger blue */
+    background: #1E90FF;
 }
 
 .visualizer {
     margin-top: 20px;
     height: 200px;
-    background: #e0f7fa; /* Light cyan */
+    background: #e0f7fa;
     border-radius: 10px;
     position: relative;
     overflow: hidden;
