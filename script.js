@@ -10,14 +10,20 @@ class MotionSoundGenerator {
         this.xElement = document.getElementById('x');
         this.yElement = document.getElementById('y');
         this.zElement = document.getElementById('z');
+        this.popup = document.getElementById('popup');
+        this.closeButton = document.getElementById('closePopup');
         
         // Bind methods
         this.handleMotion = this.handleMotion.bind(this);
         this.initialize = this.initialize.bind(this);
         this.toggleSound = this.toggleSound.bind(this);
+        this.showPopup = this.showPopup.bind(this);
         
         // Setup event listeners
         this.startButton.addEventListener('click', this.initialize);
+        this.closeButton.onclick = () => {
+            this.popup.style.display = 'none';
+        };
     }
 
     async initialize() {
@@ -123,9 +129,16 @@ class MotionSoundGenerator {
             // Add visual feedback when sound is triggered
             this.statusElement.textContent = `Playing note: ${note}`;
             this.synth.triggerAttackRelease(note, "8n");
+
+            // Show pop-up for vigorous movement
+            this.showPopup();
         } else {
             this.statusElement.textContent = 'Move device to create sound';
         }
+    }
+
+    showPopup() {
+        this.popup.style.display = 'block';
     }
 
     mapMotionToNote(motion) {
