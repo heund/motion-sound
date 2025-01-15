@@ -91,6 +91,9 @@ class MotionSoundGenerator {
         const y = event.accelerationIncludingGravity.y || 0;
         const z = event.accelerationIncludingGravity.z || 0;
 
+        // Log motion values
+        console.log(`Motion values - X: ${x}, Y: ${y}, Z: ${z}`);
+
         // Update debug display
         this.xElement.textContent = x.toFixed(2);
         this.yElement.textContent = y.toFixed(2);
@@ -101,11 +104,11 @@ class MotionSoundGenerator {
         const visualY = (y + 10) * 5;
         this.motionVisual.style.transform = `translate(${visualX}px, ${visualY}px)`;
         
-        // Lower the threshold and add visual feedback
+        // Lower the threshold to trigger sounds more easily
         const totalMotion = Math.abs(x) + Math.abs(y) + Math.abs(z);
-        this.motionVisual.style.backgroundColor = totalMotion > 1 ? '#ff4444' : '#4CAF50';
+        this.motionVisual.style.backgroundColor = totalMotion > 2 ? '#ff4444' : '#4CAF50';
         
-        if (totalMotion > 1) { 
+        if (totalMotion > 2) { 
             const note = this.mapMotionToNote(y);
             const filterFreq = this.mapMotionToFilter(x);
             const reverbAmount = this.mapMotionToReverb(z);
