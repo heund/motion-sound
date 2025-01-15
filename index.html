@@ -8,11 +8,12 @@
 </head>
 <body>
     <div class="container">
+        <h1 id="title">Motion Sound Adventure</h1>
         <div id="status">Waiting for motion access...</div>
         <div class="controls">
-            <button id="startButton">Start</button>
+            <button id="startButton">Start moving!</button>
             <div class="visualizer">
-                <div id="motionVisual"></div>
+                <div id="motionVisual" class="game-icon"></div>
             </div>
         </div>
         <div class="debug">
@@ -20,11 +21,6 @@
             <div>Y: <span id="y">0</span></div>
             <div>Z: <span id="z">0</span></div>
         </div>
-    </div>
-    <div id="popup">
-        <h2>Great Job!</h2>
-        <p>Keep moving to create more sound!</p>
-        <button id="closePopup">Close</button>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
     <script src="script.js"></script>

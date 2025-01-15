@@ -26,6 +26,13 @@ body {
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
 
+#title {
+    font-family: 'Press Start 2P', cursive; /* Game-like font */
+    font-size: 2.5em;
+    color: #00BFFF;
+    margin-bottom: 20px;
+}
+
 #status {
     margin-bottom: 20px;
     font-size: 1.5em;
@@ -60,6 +67,15 @@ body {
     overflow: hidden;
 }
 
+.game-icon {
+    width: 50px;
+    height: 50px;
+    background: url('path_to_your_icon.png') no-repeat center center;
+    background-size: contain;
+    position: absolute;
+    transition: transform 0.1s ease;
+}
+
 #motionVisual {
     position: absolute;
     width: 20px;
@@ -67,6 +83,16 @@ body {
     background: #00BFFF;
     border-radius: 50%;
     transition: all 0.1s ease;
+    animation: bounce 0.5s infinite;
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
 }
 
 .debug {
