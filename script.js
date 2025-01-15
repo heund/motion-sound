@@ -52,11 +52,15 @@ class MotionSoundGenerator {
         
         // Create synth
         this.synth = new Tone.PolySynth(Tone.Synth).toDestination();
-        this.synth.volume.value = 0;
+        this.synth.volume.value = -10; // Set to a higher volume
+        
+        // Add a global limiter
+        this.limiter = new Tone.Limiter(-1).toDestination();
+        this.synth.connect(this.limiter);
 
         // Create effects
-        this.filter = new Tone.Filter(200, "lowpass").toDestination();
-        this.reverb = new Tone.Reverb(2).toDestination();
+        this.filter = new Tone.Filter(200, "lowpass").connect(this.limiter);
+        this.reverb = new Tone.Reverb(2).connect(this.limiter);
         
         // Connect synth through effects
         this.synth.connect(this.filter);
@@ -80,7 +84,7 @@ class MotionSoundGenerator {
 
     toggleSound() {
         this.isPlaying = !this.isPlaying;
-        this.startButton.textContent = this.isPlaying ? 'Stop' : 'Start';
+        this.startButton.textContent = this.isPlaying ? 'Stop' : 'Start moving!';
         this.statusElement.textContent = this.isPlaying ? 'Move your device to create sound' : 'Paused';
     }
 
