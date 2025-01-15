@@ -90,14 +90,15 @@ class MotionSoundGenerator {
         this.zElement.textContent = z.toFixed(2);
 
         // Update visualizer
-        const visualX = (x + 10) * 5; // Scale and offset for visibility
+        const visualX = (x + 10) * 5;
         const visualY = (y + 10) * 5;
         this.motionVisual.style.transform = `translate(${visualX}px, ${visualY}px)`;
-
-        // Map motion to sound parameters
-        const totalMotion = Math.abs(x) + Math.abs(y) + Math.abs(z);
         
-        if (totalMotion > 2) { // Threshold to prevent constant sound
+        // Lower the threshold and add visual feedback
+        const totalMotion = Math.abs(x) + Math.abs(y) + Math.abs(z);
+        this.motionVisual.style.backgroundColor = totalMotion > 1 ? '#ff4444' : '#4CAF50';
+        
+        if (totalMotion > 1) { 
             const note = this.mapMotionToNote(y);
             const filterFreq = this.mapMotionToFilter(x);
             const reverbAmount = this.mapMotionToReverb(z);
@@ -105,7 +106,11 @@ class MotionSoundGenerator {
             this.filter.frequency.value = filterFreq;
             this.reverb.wet.value = reverbAmount;
             
+            // Add visual feedback when sound is triggered
+            this.statusElement.textContent = `Playing note: ${note}`;
             this.synth.triggerAttackRelease(note, "8n");
+        } else {
+            this.statusElement.textContent = 'Move device to create sound';
         }
     }
 
