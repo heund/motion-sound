@@ -24,6 +24,9 @@ class MotionSoundGenerator {
             const y = e.clientY / window.innerHeight;
             this.circle.style.transform = `translate(${x * 20}px, ${y * 20}px)`;
         });
+        this.circle.addEventListener('click', () => {
+            this.circle.classList.toggle('active');
+        });
     }
 
     async initialize() {
@@ -56,21 +59,15 @@ class MotionSoundGenerator {
         // Initialize Tone.js
         await Tone.start();
         
-        // Create synth
-        this.synth = new Tone.PolySynth(Tone.Synth).toDestination();
-        this.synth.volume.value = -10; // Set to a higher volume
-        
-        // Add a global limiter
-        this.limiter = new Tone.Limiter(-1).toDestination();
-        this.synth.connect(this.limiter);
+        // Create FM synth
+        this.fmSynth = new Tone.FMSynth().toDestination();
+        this.limiter = new Tone.Limiter(-10).toDestination();
+        this.reverb = new Tone.Reverb(5).toDestination();
+        this.delay = new Tone.FeedbackDelay(0.5).toDestination();
 
-        // Create effects
-        this.filter = new Tone.Filter(200, "lowpass").connect(this.limiter);
-        this.reverb = new Tone.Reverb(2).connect(this.limiter);
-        
-        // Connect synth through effects
-        this.synth.connect(this.filter);
-        this.filter.connect(this.reverb);
+        this.fmSynth.connect(this.reverb);
+        this.reverb.connect(this.delay);
+        this.delay.connect(this.limiter);
 
         // Log audio context state
         console.log('Audio context state:', Tone.context.state);
@@ -86,13 +83,6 @@ class MotionSoundGenerator {
         this.isPlaying = true;
         this.startButton.textContent = 'Stop';
         this.statusElement.textContent = 'Move your device to create sound';
-
-        // Create Tone.js effects
-        this.toneReverb = new Tone.Reverb(3).toDestination();
-        this.toneDelay = new Tone.FeedbackDelay(0.5).toDestination();
-
-        this.synth.connect(this.toneReverb);
-        this.synth.connect(this.toneDelay);
     }
 
     toggleSound() {
@@ -130,17 +120,14 @@ class MotionSoundGenerator {
             const filterFreq = this.mapMotionToFilter(x);
             const reverbAmount = this.mapMotionToReverb(z);
 
-            this.filter.frequency.value = filterFreq;
-            this.reverb.wet.value = reverbAmount;
-            
-            // Add visual feedback when sound is triggered
-            this.statusElement.textContent = `Playing note: ${note}`;
-            this.synth.triggerAttackRelease(note, "8n");
-
             // Adjust sound based on motion intensity
             const intensity = Math.abs(event.acceleration.x) + Math.abs(event.acceleration.y) + Math.abs(event.acceleration.z);
-            this.toneReverb.decay = intensity * 0.5;
-            this.toneDelay.delayTime.value = intensity * 0.01;
+            this.fmSynth.triggerAttackRelease(note, "8n", Tone.now(), intensity * 0.05);
+            this.delay.delayTime.value = intensity * 0.01;
+            this.reverb.decay = intensity * 0.5;
+
+            // Add visual feedback when sound is triggered
+            this.statusElement.textContent = `Playing note: ${note}`;
         } else {
             this.statusElement.textContent = 'Move device to create sound';
         }
