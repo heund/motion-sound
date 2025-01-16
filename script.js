@@ -10,6 +10,7 @@ class MotionSoundGenerator {
         this.xElement = document.getElementById('x');
         this.yElement = document.getElementById('y');
         this.zElement = document.getElementById('z');
+        this.circle = document.getElementById('circle');
         
         // Bind methods
         this.handleMotion = this.handleMotion.bind(this);
@@ -18,6 +19,11 @@ class MotionSoundGenerator {
         
         // Setup event listeners
         this.startButton.addEventListener('click', this.initialize);
+        window.addEventListener('mousemove', (e) => {
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+            this.circle.style.transform = `translate(${x * 20}px, ${y * 20}px)`;
+        });
     }
 
     async initialize() {
@@ -80,6 +86,13 @@ class MotionSoundGenerator {
         this.isPlaying = true;
         this.startButton.textContent = 'Stop';
         this.statusElement.textContent = 'Move your device to create sound';
+
+        // Create Tone.js effects
+        this.toneReverb = new Tone.Reverb(3).toDestination();
+        this.toneDelay = new Tone.FeedbackDelay(0.5).toDestination();
+
+        this.synth.connect(this.toneReverb);
+        this.synth.connect(this.toneDelay);
     }
 
     toggleSound() {
@@ -123,6 +136,11 @@ class MotionSoundGenerator {
             // Add visual feedback when sound is triggered
             this.statusElement.textContent = `Playing note: ${note}`;
             this.synth.triggerAttackRelease(note, "8n");
+
+            // Adjust sound based on motion intensity
+            const intensity = Math.abs(event.acceleration.x) + Math.abs(event.acceleration.y) + Math.abs(event.acceleration.z);
+            this.toneReverb.decay = intensity * 0.5;
+            this.toneDelay.delayTime.value = intensity * 0.01;
         } else {
             this.statusElement.textContent = 'Move device to create sound';
         }
