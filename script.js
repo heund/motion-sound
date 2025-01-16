@@ -61,7 +61,8 @@ class MotionSoundGenerator {
         
         // Create FM synth
         this.fmSynth = new Tone.FMSynth().toDestination();
-        this.limiter = new Tone.Limiter(-10).toDestination();
+        this.fmSynth.volume.value = -15;
+        this.limiter = new Tone.Limiter(-20).toDestination();
         this.reverb = new Tone.Reverb(5).toDestination();
         this.delay = new Tone.FeedbackDelay(0.5).toDestination();
 
@@ -122,7 +123,7 @@ class MotionSoundGenerator {
 
             // Adjust sound based on motion intensity
             const intensity = Math.abs(event.acceleration.x) + Math.abs(event.acceleration.y) + Math.abs(event.acceleration.z);
-            this.fmSynth.triggerAttackRelease(note, "8n", Tone.now(), intensity * 0.05);
+            this.fmSynth.triggerAttackRelease(note, "8n", Tone.now(), intensity * 0.02);
             this.delay.delayTime.value = intensity * 0.01;
             this.reverb.decay = intensity * 0.5;
 
